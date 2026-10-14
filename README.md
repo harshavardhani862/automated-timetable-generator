@@ -1,3 +1,4 @@
+
 # Automated Timetable Generator
 
 A Python/Flask academic scheduling workspace that imports institutional timetable data, searches for a complete schedule, independently validates faculty/section/room conflicts, and exports CSV. The UI presents the project as a B2B campus-operations SaaS prototype; it does not claim production authentication, multi-tenancy, persistence, or deployment.
@@ -126,3 +127,6 @@ Then open <http://127.0.0.1:5000>.
 ## Limitations and honest claims
 
 This is an educational prototype, not a production university timetabling system. It supports one-slot sessions, has no database/authentication, and does not model holidays, instructor availability, course capacities, lab-specific room requirements, or multi-slot lectures. Backtracking remains exponential in the worst case (roughly `O(m^n)` before pruning, for `n` sessions and up to `m` placements per session); conflict checking adds a linear scan over placed assignments in this implementation. Benchmark results are hardware- and input-dependent. The benchmark demonstrates process-based concurrency over independent jobs, not parallel search inside one timetable.
+=======
+# automated-timetable-generator
+An Automated Timetable Generator that creates optimized academic timetables by assigning subjects, faculty, classrooms, and time slots while minimizing scheduling conflicts and satisfying academic constraints.
