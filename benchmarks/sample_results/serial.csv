@@ -1,0 +1,3 @@
+sessions,repeat,success,assignments,search_nodes,solver_runtime_ms,measured_runtime_ms,peak_traced_memory_kb,validation_violations
+8,1,True,8,9,5.5,5.523,48.05,0
+20,1,True,20,21,14.307,14.32,87.97,0

@@ -1,0 +1,10 @@
+__pycache__/
+*.py[cod]
+.venv/
+.coverage
+htmlcov/
+.env
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+benchmark_results.csv

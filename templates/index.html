@@ -1,0 +1,309 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101c35">
+  <title>CampusOS | Timetable workspace</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='app.css') }}">
+  <script src="{{ url_for('static', filename='app.js') }}" defer></script>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <a class="brand" href="#overview" aria-label="CampusOS home">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 32 32" fill="none"><path d="M6 7.5h8v8H6zM18 7.5h8v8h-8zM6 19.5h8v6H6zM18 19.5h8v6h-8z" stroke="currentColor" stroke-width="2"/><path d="M10 11.5h.01M22 11.5h.01M10 22.5h.01M22 22.5h.01" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg>
+        </span>
+        <span><strong>campus<span>OS</span></strong><small>ACADEMIC OPERATIONS</small></span>
+      </a>
+
+      <div class="workspace-picker">
+        <span class="workspace-avatar">N</span>
+        <span class="workspace-name"><strong>Northstar University</strong><small>Institution workspace</small></span>
+        <span class="chevron" aria-hidden="true">⌄</span>
+      </div>
+
+      <p class="nav-label">WORKSPACE</p>
+      <nav aria-label="Workspace navigation">
+        <a class="nav-link active" href="#overview">
+          <span class="nav-icon" aria-hidden="true">▦</span>Overview
+        </a>
+        <a class="nav-link" href="#schedule">
+          <span class="nav-icon" aria-hidden="true">▤</span>Timetable
+          <span class="nav-count">{{ result.assignments|length }}</span>
+        </a>
+        <a class="nav-link" href="#import">
+          <span class="nav-icon" aria-hidden="true">↥</span>Data import
+        </a>
+      </nav>
+
+      <p class="nav-label nav-label-spaced">PLANNING TOOLS</p>
+      <nav aria-label="Planning tools">
+        <a class="nav-link" href="#schedule">
+          <span class="nav-icon" aria-hidden="true">◇</span>Sections
+          <span class="nav-count">{{ section_count }}</span>
+        </a>
+        <a class="nav-link" href="#schedule">
+          <span class="nav-icon" aria-hidden="true">♧</span>Faculty
+          <span class="nav-count">{{ faculty_count }}</span>
+        </a>
+        <a class="nav-link" href="#import">
+          <span class="nav-icon" aria-hidden="true">⌂</span>Rooms
+          <span class="nav-count">{{ room_count }}</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-bottom">
+        <div class="support-card">
+          <span class="support-spark" aria-hidden="true">✦</span>
+          <strong>Built for better planning</strong>
+          <p>Review constraints, resolve clashes, and publish a schedule your campus can trust.</p>
+          <a href="#workflow">View defence workflow <span aria-hidden="true">→</span></a>
+        </div>
+        <div class="user-profile">
+          <span class="user-avatar">HA</span>
+          <span><strong>Harsh A.</strong><small>Workspace admin</small></span>
+          <span class="profile-more" aria-hidden="true">···</span>
+        </div>
+      </div>
+    </aside>
+
+    <div class="main-column">
+      <header class="topbar">
+        <div class="breadcrumbs"><span>Workspace</span><span aria-hidden="true">/</span><strong>Overview</strong></div>
+        <div class="topbar-actions">
+          <span class="term-pill"><span class="status-dot"></span> Academic year 2026–27</span>
+          <button class="icon-button" type="button" aria-label="Notifications">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M18 9a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9ZM10 21h4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span class="notification-dot"></span>
+          </button>
+          <span class="topbar-avatar">HA</span>
+        </div>
+      </header>
+
+      <main id="overview" class="content">
+        <div class="page-heading">
+          <div>
+            <div class="eyebrow">ACADEMIC OPERATIONS <span class="eyebrow-line"></span> SEMESTER 1</div>
+            <h1>Timetable workspace</h1>
+            <p>Plan a conflict-free semester across your sections, faculty, and campus rooms.</p>
+          </div>
+          <a class="button button-secondary" href="{{ url_for('import_template') }}">
+            <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 3v9m0 0 3-3m-3 3L7 9m-3 6v2h12v-2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Download template
+          </a>
+        </div>
+
+        {% if error %}
+        <div class="alert alert-error" role="alert">
+          <span class="alert-icon" aria-hidden="true">!</span>
+          <div><strong>{{ error_title|default("Could not process the schedule") }}</strong><p>{{ error }}</p></div>
+        </div>
+        {% endif %}
+
+        <section class="hero-panel" aria-label="Workspace summary">
+          <div class="hero-content">
+            <span class="hero-kicker"><span class="hero-kicker-dot"></span> SCHEDULING, SIMPLIFIED</span>
+            <h2>A better rhythm<br>for your campus.</h2>
+            <p>Bring your course data together. Let the scheduler find the fit, while keeping every section, faculty member, and room in sync.</p>
+            <a href="#import" class="hero-cta">Import your schedule <span aria-hidden="true">→</span></a>
+          </div>
+          <div class="hero-art" aria-hidden="true">
+            <div class="orbit orbit-one"></div><div class="orbit orbit-two"></div>
+            <div class="art-glow"></div>
+            <div class="mini-calendar">
+              <div class="mini-calendar-top"><span>WEEKLY PLAN</span><span>•••</span></div>
+              <div class="mini-calendar-grid">
+                <i></i><i></i><i></i><i></i>
+                <b></b><b></b><b></b><b></b>
+                <em></em><em></em><em></em><em></em>
+                <strong></strong><strong></strong><strong></strong><strong></strong>
+              </div>
+              <div class="art-check {{ 'art-check-alert' if not result.success }}"><span aria-hidden="true">{{ '✓' if result.success else '!' }}</span><span><strong>{{ 'All clear' if result.success else 'Review needed' }}</strong><small>{{ 'No scheduling conflicts' if result.success else 'Check resource constraints' }}</small></span></div>
+            </div>
+          </div>
+          <div class="hero-decoration" aria-hidden="true">✳</div>
+        </section>
+
+        <section class="metrics" aria-label="Schedule metrics">
+          <article class="metric-card">
+            <div class="metric-top"><span class="metric-icon indigo">▤</span><span class="metric-trend">CURRENT PLAN</span></div>
+            <strong>{{ result.assignments|length }}<small> / {{ result.total_classes }}</small></strong>
+            <span class="metric-label">Classes scheduled</span>
+            <div class="metric-progress"><span style="width: {{ (100 * result.assignments|length / result.total_classes)|int if result.total_classes else 0 }}%"></span></div>
+          </article>
+          <article class="metric-card">
+            <div class="metric-top"><span class="metric-icon violet">◇</span><span class="metric-context">IN THIS PLAN</span></div>
+            <strong>{{ section_count }}</strong>
+            <span class="metric-label">Sections</span>
+            <span class="metric-foot">Student cohorts being coordinated</span>
+          </article>
+          <article class="metric-card">
+            <div class="metric-top"><span class="metric-icon teal">♧</span><span class="metric-context">IN THIS PLAN</span></div>
+            <strong>{{ faculty_count }}</strong>
+            <span class="metric-label">Faculty members</span>
+            <span class="metric-foot">Teaching schedules considered</span>
+          </article>
+          <article class="metric-card">
+            <div class="metric-top"><span class="metric-icon amber">⌂</span><span class="metric-context">IN THIS PLAN</span></div>
+            <strong>{{ room_count }}</strong>
+            <span class="metric-label">Available rooms</span>
+            <span class="metric-foot">Rooms considered for allocation</span>
+          </article>
+        </section>
+
+        <section id="import" class="panel import-panel">
+          <div class="panel-heading">
+            <div>
+              <span class="section-kicker">GET STARTED</span>
+              <h2>Bring in your course data</h2>
+              <p>Upload a spreadsheet and we'll build a schedule around your real campus constraints.</p>
+            </div>
+            <span class="secure-badge">CSV + XLSX IMPORT</span>
+          </div>
+
+          <form id="import-form" class="import-form" action="{{ url_for('import_schedule') }}" method="post" enctype="multipart/form-data">
+            <div class="import-grid">
+              <label class="dropzone" for="schedule-file" id="dropzone">
+                <input id="schedule-file" name="file" type="file" accept=".csv,.xlsx,text/csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" required>
+                <span class="upload-icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 16V4m0 0L7.5 8.5M12 4l4.5 4.5M5 14v5h14v-5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                <strong id="file-name">Drop your file here, or <span>browse</span></strong>
+                <span id="file-meta">CSV or Excel workbook (.xlsx), up to 5 MB</span>
+                <span class="dropzone-hint">Start with our <a href="{{ url_for('import_template') }}">ready-to-fill template</a></span>
+              </label>
+
+              <div class="schedule-settings">
+                <div class="settings-title"><span class="settings-step">01</span><div><strong>Set your planning window</strong><small>Separate values with commas</small></div></div>
+                <label for="days-input">Teaching days</label>
+                <input id="days-input" name="days" value="{{ days_config|default('Monday, Tuesday, Wednesday, Thursday, Friday') }}" placeholder="Monday, Tuesday, Wednesday" required>
+                <label for="slots-input">Periods</label>
+                <input id="slots-input" name="slots" value="{{ slots_config|default('09:00, 10:00, 11:00, 12:00') }}" placeholder="09:00, 10:00, 11:00" required>
+                <p class="settings-note"><span aria-hidden="true">ⓘ</span> Rooms and per-class availability are read from your spreadsheet.</p>
+              </div>
+            </div>
+            <div class="import-footer">
+              <div class="file-guidance">
+                <strong>Required columns</strong>
+                <span>subject · section · faculty · rooms</span>
+                <a href="#import-help">View all supported columns</a>
+              </div>
+              <button id="import-submit" class="button button-primary" type="submit">
+                Import &amp; generate <span aria-hidden="true">→</span>
+              </button>
+            </div>
+          </form>
+          {% if imported_filename %}
+          <div class="import-success" role="status"><span aria-hidden="true">✓</span> {{ imported_filename }} imported — {{ result.total_classes }} class rows processed.</div>
+          {% endif %}
+          {% if status_message and not imported_filename %}
+          <div class="demo-note"><span class="demo-note-dot"></span>{{ status_message }} <span>•</span> Import your own file to replace the sample.</div>
+          {% endif %}
+
+          <details id="import-help" class="format-help">
+            <summary>What should my spreadsheet contain?</summary>
+            <div class="format-content">
+              <p>Use one row per class. For Excel workbooks, use a sheet named <strong>Sessions</strong> (or the first sheet).</p>
+              <div class="column-list">
+                <span><strong>subject</strong>Course or class name</span>
+                <span><strong>section</strong>Student section identifier</span>
+                <span><strong>faculty</strong>Instructor name</span>
+                <span><strong>rooms</strong>Permitted rooms; separate multiple rooms with semicolons</span>
+                <span><strong>available_days</strong>Optional allowed days; semicolon-separated</span>
+                <span><strong>available_slots</strong>Optional allowed periods; semicolon-separated</span>
+                <span><strong>preferred_days</strong>Optional soft preference; semicolon-separated</span>
+              </div>
+            </div>
+          </details>
+        </section>
+
+        <details class="advanced-input panel">
+          <summary>Advanced: edit scheduling JSON</summary>
+          <form method="post" action="{{ url_for('index') }}">
+            <textarea name="problem" spellcheck="false">{{ problem_json }}</textarea>
+            <button class="button button-secondary" type="submit">Generate from JSON</button>
+          </form>
+        </details>
+
+        <section id="schedule" class="panel timetable-panel">
+          <div class="panel-heading timetable-heading">
+            <div>
+              <span class="section-kicker">LIVE SCHEDULE</span>
+              <h2>Weekly timetable</h2>
+              <p>Review class placements across your campus day.</p>
+            </div>
+            <div class="schedule-actions">
+              <span class="validation-pill {{ 'valid' if result.success else 'invalid' }}">
+                <span aria-hidden="true">{{ '✓' if result.success else '!' }}</span>
+                {{ 'No conflicts detected' if result.success else 'Review conflicts' }}
+              </span>
+              {% if result.assignments %}
+              <form method="post" action="{{ url_for('export_csv') }}">
+                <input type="hidden" name="data" value="{{ result.assignments|tojson|forceescape }}">
+                <button type="submit" class="button button-secondary export-button">
+                  <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 3v9m0 0 3-3m-3 3L7 9m-3 6v2h12v-2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  Export CSV
+                </button>
+              </form>
+              {% endif %}
+            </div>
+          </div>
+
+          {% if not result.success %}
+          <div class="alert alert-error schedule-alert" role="alert">
+            <span class="alert-icon" aria-hidden="true">!</span>
+            <div><strong>No complete timetable could be created</strong>
+              <ul>{% for message in diagnostics %}<li>{{ message }}</li>{% endfor %}</ul>
+            </div>
+          </div>
+          {% endif %}
+
+          <div class="schedule-summary">
+            <span><strong>{{ result.assignments|length }}</strong> / {{ result.total_classes }} classes placed</span>
+            <span><strong>{{ days|length }}</strong> teaching days</span>
+            <span><strong>{{ slots|length }}</strong> periods per day</span>
+            <span class="summary-runtime">Solver {{ '%.2f'|format(result.elapsed_ms) }} ms</span>
+          </div>
+          <div class="table-wrap" role="region" aria-label="Weekly timetable, scroll horizontally for all periods" tabindex="0">
+            <table class="schedule-table">
+              <thead><tr><th class="day-column" scope="col">DAY</th>{% for slot in slots %}<th scope="col">{{ slot }}</th>{% endfor %}</tr></thead>
+              <tbody>
+                {% for row in grid %}
+                <tr><th class="day-cell" scope="row"><span>{{ row.day[:3]|upper }}</span><strong>{{ row.day }}</strong></th>
+                  {% for bookings in row.cells %}
+                  <td class="schedule-cell {{ 'cell-empty' if not bookings else '' }}">
+                    {% if bookings %}
+                      {% for booking in bookings %}
+                      <article class="class-event event-{{ loop.index0 % 5 }}">
+                        <strong>{{ booking.subject }}</strong>
+                        <span class="event-section">{{ booking.section }}</span>
+                        <span>{{ booking.faculty }}</span>
+                        <span class="event-room">{{ booking.room }}</span>
+                      </article>
+                      {% endfor %}
+                    {% else %}<span class="empty-mark">—</span>{% endif %}
+                  </td>
+                  {% endfor %}
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+          <div class="table-legend"><span><i class="legend-dot scheduled"></i>Scheduled class</span><span><i class="legend-dot open"></i>Open period</span><span>Classes sharing a period are placed in separate rooms.</span></div>
+        </section>
+
+        <section id="workflow" class="workflow-panel">
+          <div class="workflow-heading"><div><span class="section-kicker">PROJECT DEFENCE</span><h2>From campus challenge to reliable schedule</h2></div><span class="workflow-tag">COMPUTATIONAL THINKING</span></div>
+          <div class="workflow-steps">
+            <article><span>01</span><strong>Identify &amp; model</strong><p>Represent courses, sections, faculty, rooms, and availability as constraints.</p></article>
+            <article><span>02</span><strong>Search &amp; optimise</strong><p>Use greedy ordering, forward checking, backtracking, and preference-aware pruning.</p></article>
+            <article><span>03</span><strong>Validate &amp; measure</strong><p>Check for clashes; run the test suite, static checks, and performance benchmarks.</p></article>
+            <article><span>04</span><strong>Review &amp; defend</strong><p>Explain complexity, trade-offs, concurrency limits, and what the evidence proves.</p></article>
+          </div>
+        </section>
+        <footer class="page-footer"><span>CampusOS <span aria-hidden="true">·</span> Academic scheduling workspace</span><span>Prototype environment <i></i> Ready for planning</span></footer>
+      </main>
+    </div>
+  </div>
+</body>
+</html>
